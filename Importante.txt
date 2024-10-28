@@ -1,0 +1,1 @@
+Para la funcionalidad del MusicPlayer, es necesario tener instalado ffmpeg en el sistema donde se ejecute el bot.
