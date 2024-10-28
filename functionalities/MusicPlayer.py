@@ -65,4 +65,24 @@ class MusicPlayer(commands.Cog):
         if ctx.voice_client and ctx.voice_client.is_playing():
             ctx.voice_client.stop()
             await ctx.send("Canción omitida.")
+
+
+    @commands.command(name="volume", help="Establece el volumen de reproducción (0 - 100).")
+    async def set_volume(self, ctx, volume=None):
+        if volume and volume.isnumeric():
+            volume = int(volume)
+            if volume >= 0 and volume <= 100:
+                old_volume = self.FFMPEG_OPTIONS.split('=')[1]
+                self.FFMPEG_OPTIONS = self.FFMPEG_OPTIONS.replace(old_volume, f"{volume / 100}'") # Importante poner la comilla simple despues del volumen. Es la comilla de cierre del parametro volume de las opciones
+                await ctx.send("¡El volumen ha sido actualizado correctamente!\nEl nuevo ajuste se aplicará a partir de la siguiente canción.")
+            else:
+                await ctx.send("El volumen tiene que ser un número entre 0 y 100 (ambos incluidos).")
+        else:
+            await ctx.send("El formato del comando es: '!volume <<volumen>>'. El volumen tiene que ser un número entre 0 y 100 (ambos incluidos).")
+
+    
+    @commands.command(name="leave", help="Hace que el bot se salga del canal de voz en el que esté.")
+    async def leave_channel(self, ctx):
+        if ctx.voice_client:
+            await ctx.voice_client.disconnect()
             

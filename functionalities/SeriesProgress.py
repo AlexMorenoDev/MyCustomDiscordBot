@@ -15,7 +15,7 @@ class SeriesProgress(commands.Cog):
             return name
 
 
-        @commands.command(name="add-serie", help="Añade una nueva serie a la lista.")
+        @commands.command(name="add-serie", help="Añade una nueva serie a la lista. (Nombre de la serie entre comillas)")
         async def add_series(self, ctx, series_name=None, season=None, episode=None):
             if series_name and season and episode:
                 with open(self.db, 'a', encoding="utf-8") as series_list:
@@ -24,10 +24,10 @@ class SeriesProgress(commands.Cog):
 
                 await ctx.send("¡La serie se ha añadido correctamente!")
             else:
-                await ctx.send("El formato del comando es: '!add-serie <<nombre_serie>> <<número_temporada>> <<número_episodio>>'.")
+                await ctx.send("El formato del comando es: '!add-serie <<nombre_serie>> <<número_temporada>> <<número_episodio>>'. Además, el nombre de la serie hay que escribirlo entre comillas.")
                  
 
-        @commands.command(name="delete-serie", help="Elimina una serie existente en la lista.")
+        @commands.command(name="delete-serie", help="Elimina una serie existente en la lista. (Nombre de la serie entre comillas)")
         async def delete_series(self, ctx, series_name=None):
             if series_name:
                 deleted = False
@@ -47,13 +47,13 @@ class SeriesProgress(commands.Cog):
                     await ctx.send("¡La serie se ha eliminado correctamente!")
                 else:
                     os.remove(temp_file)
-                    await ctx.send("No hay una serie con ese nombre en el listado. Comprueba que has escrito el nombre exactamente igual que el que hay en el listado: '!show-series-list'.")
+                    await ctx.send("No hay una serie con ese nombre en el listado. Comprueba que has escrito el nombre exactamente igual que el que hay en el listado: '!show-series-list'. Además, el nombre de la serie hay que escribirlo entre comillas.")
                 
             else:
-                await ctx.send("El formato del comando es: '!delete-serie <<nombre_serie>>'")
+                await ctx.send("El formato del comando es: '!delete-serie <<nombre_serie>>'. Además, el nombre de la serie hay que escribirlo entre comillas.")
 
 
-        @commands.command(name="update-serie", help="Actualizar la temporada y el capítulo de una serie.")
+        @commands.command(name="update-serie", help="Actualizar la temporada y el capítulo de una serie. (Nombre de la serie entre comillas)")
         async def update_series(self, ctx, series_name=None, season=None, episode=None):
             if series_name:
                 updated = False
@@ -75,10 +75,10 @@ class SeriesProgress(commands.Cog):
                     await ctx.send("¡La serie se ha actualizado correctamente!")
                 else:
                     os.remove(temp_file)
-                    await ctx.send("No hay una serie con ese nombre en el listado. Comprueba que has escrito el nombre exactamente igual que el que hay en el listado: '!show-series-list'.")
+                    await ctx.send("No hay una serie con ese nombre en el listado. Comprueba que has escrito el nombre exactamente igual que el que hay en el listado: '!show-series-list'. Además, el nombre de la serie hay que escribirlo entre comillas.")
                 
             else:
-                await ctx.send("El formato del comando es: '!update-serie <<nombre_serie>>'")
+                await ctx.send("El formato del comando es: '!update-serie <<nombre_serie>>'. Además, el nombre de la serie hay que escribirlo entre comillas.")
 
 
         @commands.command(name="show-series-list", help="Mostrar el listado de todas las series registradas.")
@@ -95,7 +95,7 @@ class SeriesProgress(commands.Cog):
                 await ctx.send("No hay creada una lista en la que guardar las series. Contacta con el creador del bot.")
 
 
-        @commands.command(name="show-serie", help="Mostrar la temporada y el capítulo registrados de una serie.")
+        @commands.command(name="show-serie", help="Mostrar la temporada y el capítulo registrados de una serie. (Nombre de la serie entre comillas)")
         async def show_one_series(self, ctx, series_name=None):
             if series_name:
                 if os.path.isfile(self.db):
@@ -112,10 +112,10 @@ class SeriesProgress(commands.Cog):
                                     await ctx.send(line)
                                     return
                             
-                            await ctx.send("No hay una serie con ese nombre en el listado. Comprueba que has escrito el nombre exactamente igual que el que hay en el listado: '!show-series-list'.")
+                            await ctx.send("No hay una serie con ese nombre en el listado. Comprueba que has escrito el nombre exactamente igual que el que hay en el listado: '!show-series-list'. Además, el nombre de la serie hay que escribirlo entre comillas.")
         
                 else:
                     await ctx.send("No hay creada una lista en el que guardar las series. Contacta con el creador del bot.")
             
             else:
-                await ctx.send("El formato del comando es: '!show-serie <<nombre_serie>>'")
+                await ctx.send("El formato del comando es: '!show-serie <<nombre_serie>>'. Además, el nombre de la serie hay que escribirlo entre comillas.")
