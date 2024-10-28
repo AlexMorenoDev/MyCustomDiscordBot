@@ -3,13 +3,10 @@ from bs4 import BeautifulSoup
 from discord.ext import commands
 
 
-class WeatherBot(commands.Cog):
+class WeatherInfo(commands.Cog):
         def __init__(self, bot):
             self.bot = bot
 
-        @commands.Cog.listener()
-        async def on_ready(self):
-            print(f'{self.bot.user.name} se ha conectado a Discord!')
 
         @commands.command(name="tiempo", help="Responde con los datos meteorológicos de la ciudad que le digas.")
         async def get_weather_info(self, ctx, city=None):
@@ -24,7 +21,7 @@ class WeatherBot(commands.Cog):
                 except:
                     await ctx.send(f"No se han podido encontrar datos meteorológicos de '{city}'.")
             else:
-                await ctx.send("El formato del comando es: '!tiempo <<nombre_ciudad>>'")
+                await ctx.send("El formato del comando es: '!tiempo <<nombre_ciudad>>'.")
 
 
 def format_weather_response(soup, city):
