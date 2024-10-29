@@ -43,10 +43,10 @@ class MusicPlayer(commands.Cog):
             await ctx.send(f"Añadido a la cola de reproducción: **{title}**")
 
         if not ctx.voice_client.is_playing():
-            await self.play_next(ctx)
+            await self.play_next(ctx, False)
 
 
-    async def play_next(self, ctx):
+    async def play_next(self, ctx, previous_song):
         if self.queue:
             url, title = self.queue.pop(0)
             source = discord.FFmpegPCMAudio(
@@ -54,9 +54,9 @@ class MusicPlayer(commands.Cog):
                 before_options="-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5", 
                 options=self.FFMPEG_OPTIONS
             )
-            ctx.voice_client.play(source, after=lambda _:self.bot.loop.create_task(self.play_next(ctx)))
+            ctx.voice_client.play(source, after=lambda _:self.bot.loop.create_task(self.play_next(ctx, True)))
             await ctx.send(f"Se está reproduciendo: **{title}**")
-        elif not ctx.voice_client.is_playing():
+        elif not ctx.voice_client.is_playing() and previous_song:
             await ctx.send("La cola de reproducción está vacía.")
 
 
@@ -80,9 +80,34 @@ class MusicPlayer(commands.Cog):
         else:
             await ctx.send("El formato del comando es: '!volume <<volumen>>'. El volumen tiene que ser un número entre 0 y 100 (ambos incluidos).")
 
+
+    @commands.command(name="join", help="Hace que el bot se una al canal en el que se encuentre el usuario que ha escrito el comando.")
+    async def join_channel(self, ctx):
+        if ctx.author.voice:
+            if not ctx.voice_client:
+                await ctx.author.voice.channel.connect()
+            else:
+                await ctx.send("Ya estoy dentro de un canal de voz.")
+        else:
+            await ctx.send("Para ejecutar este comando tienes que estar dentro de un canal de voz.")
+
     
     @commands.command(name="leave", help="Hace que el bot se salga del canal de voz en el que esté.")
     async def leave_channel(self, ctx):
         if ctx.voice_client:
             await ctx.voice_client.disconnect()
+        else:
+            await ctx.send("No estoy en ningún canal de voz.")
+
+    
+    @commands.command(name="speak", help="Hace que el bot diga su nombre.")
+    async def speak(self, ctx):
+        if ctx.voice_client:
+            if not ctx.voice_client.is_playing():
+                filepath = "./sounds/walle_name.mp3"
+                ctx.voice_client.play(discord.FFmpegPCMAudio(filepath), after=lambda _:self.bot.loop.create_task(self.play_next(ctx, False)))
+            else:
+                await ctx.send("No puedo hablar porque estoy reproduciendo un audio.")
+        else:
+            await ctx.send("No estoy en ningún canal de voz.")
             
